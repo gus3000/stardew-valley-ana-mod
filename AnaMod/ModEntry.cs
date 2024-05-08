@@ -2,6 +2,8 @@
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Characters;
+using StardewValley.Menus;
 
 namespace AnaMod;
 
@@ -10,6 +12,8 @@ internal sealed class ModEntry : Mod
     private ModConfig Config { get; set; } = new ModConfig();
 
     private Random _random = new Random();
+
+    private Junimo? _junimo = null;
 
     public override void Entry(IModHelper helper)
     {
@@ -33,17 +37,6 @@ internal sealed class ModEntry : Mod
 
         data["AnaMod-Mail-1"] =
             "Ma chérie, ^Tu travailles dur à la ferme, prends une pause pour manger ce petit fromage < ^^  - ton chéri %item object 424 1%%";
-
-        // // "MyModMail1" is referred to as the mail Id.  It is how you will uniquely identify and reference your mail.
-        // // The @ will be replaced with the player's name.  Other items do not seem to work (''i.e.,'' %pet or %farm)
-        // // %item object 388 50 %%   - this adds 50 pieces of wood when added to the end of a letter.
-        // // %item tools Axe Hoe %%   - this adds tools; may list any of Axe, Hoe, Can, Scythe, and Pickaxe
-        // // %item money 250 601  %%  - this sends a random amount of gold from 250 to 601 inclusive.
-        // // For more details, see: https://stardewvalleywiki.com/Modding:Mail_data 
-        // data["AnaModMail1"] = "Hello @... ^A single carat is a new line ^^Two carats will double space.";
-        // data["AnaModMail2"] = "This is how you send an existing item via email! %item object 388 50 %%";
-        // data["AnaModMail3"] = "Coin $   Star =   Heart <   Dude +  Right Arrow >   Up Arrow `";
-        // data["AnaModMail4Wizard"] = "Include Wizard in the mail Id to use the special background on a letter";
     }
 
     private void OnDayStarted(object? sender, DayStartedEventArgs e)
@@ -60,27 +53,12 @@ internal sealed class ModEntry : Mod
         {
             Game1.showGlobalMessage("<! - le chéri");
         }
-        // Monitor.Log($"Pressed button {e.Button}", LogLevel.Debug);
-        // switch (e.Button)
-        // {
-        //     case SButton.NumPad0:
-        //         Game1.chatBox.addMessage("<<<<<<", Color.White);
-        //         break;
-        //     case SButton.NumPad1:
-        //         Game1.player.mailbox.Add("AnaMod-Mail-1");
-        //         break;
-        //     // case SButton.NumPad2:
-        //     //     Game1.player.mailbox.Add("AnaModMail2");
-        //     //     break;
-        //     // case SButton.NumPad3:
-        //     //     Game1.player.mailbox.Add("AnaModMail3");
-        //     //     break;
-        //     // case SButton.NumPad4:
-        //     //     Game1.player.mailbox.Add("AnaModMail4Wizard");
-        //     //     break;
-        //     case SButton.NumPad5:
-        //         ShowLove();
-        //         break;
-        // }
+
+        if (e.Button == SButton.Space)
+        {
+            // ExampleMethods.SpawnGold();
+            if(_junimo == null)
+                _junimo = ExampleMethods.SpawnSprite();
+        }
     }
 }
