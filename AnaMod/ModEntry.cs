@@ -7,28 +7,18 @@ namespace AnaMod;
 
 internal sealed class ModEntry : Mod
 {
-    private int _loveIcon = HUDMessage.achievement_type;
     private ModConfig Config { get; set; } = new ModConfig();
+
+    private Random _random = new Random();
 
     public override void Entry(IModHelper helper)
     {
         helper.Events.Input.ButtonPressed += OnButtonPressed;
-        helper.Events.Content.AssetRequested += this.OnAssetRequested;
+        helper.Events.Content.AssetRequested += OnAssetRequested;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
         // helper.Events.GameLoop.GameLaunched += OnGameLaunched;
     }
 
-    private void ShowLove()
-    {
-        var hudMessage = new HUDMessage("Bonjour ma chérie");
-        hudMessage.whatType = _loveIcon;
-        Game1.addHUDMessage(hudMessage);
-
-        _loveIcon++;
-        // if (_loveIcon > HUDMessage.screenshot_type)
-            // _loveIcon = HUDMessage.achievement_type;
-    }
-    
     private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
         if (e.NameWithoutLocale.IsEquivalentTo("Data/mail"))
@@ -36,12 +26,13 @@ internal sealed class ModEntry : Mod
             e.Edit(EditImpl);
         }
     }
-    
+
     public void EditImpl(IAssetData asset)
     {
         var data = asset.AsDictionary<string, string>().Data;
 
-        data["AnaMod-Mail-1"] = "Ma chérie, ^Tu travailles dur à la ferme, prends une pause pour manger ce petit fromage < ^^  - ton chéri %item object 424 1%%";
+        data["AnaMod-Mail-1"] =
+            "Ma chérie, ^Tu travailles dur à la ferme, prends une pause pour manger ce petit fromage < ^^  - ton chéri %item object 424 1%%";
 
         // // "MyModMail1" is referred to as the mail Id.  It is how you will uniquely identify and reference your mail.
         // // The @ will be replaced with the player's name.  Other items do not seem to work (''i.e.,'' %pet or %farm)
@@ -54,7 +45,7 @@ internal sealed class ModEntry : Mod
         // data["AnaModMail3"] = "Coin $   Star =   Heart <   Dude +  Right Arrow >   Up Arrow `";
         // data["AnaModMail4Wizard"] = "Include Wizard in the mail Id to use the special background on a letter";
     }
-    
+
     private void OnDayStarted(object? sender, DayStartedEventArgs e)
     {
         Game1.addMailForTomorrow("AnaMod-Mail-1");
@@ -65,6 +56,10 @@ internal sealed class ModEntry : Mod
         if (!Context.IsWorldReady || Game1.currentLocation == null)
             return;
 
+        if (_random.Next(1000) == 0)
+        {
+            Game1.showGlobalMessage("<! - le chéri");
+        }
         // Monitor.Log($"Pressed button {e.Button}", LogLevel.Debug);
         // switch (e.Button)
         // {
