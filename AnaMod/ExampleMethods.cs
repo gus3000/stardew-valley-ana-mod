@@ -21,9 +21,9 @@ public class ExampleMethods
             Game1.showRedMessage("Cannot spawn gold");
     }
 
-    public static Korogu SpawnKorogu()
+    public static Korogu SpawnKorogu(Vector2 pos)
     {
-        var pos = Game1.player.Position + Vector2.One * 64;
+        // pos = Game1.player.Position + Vector2.One * 64;
         // var junimo = new Junimo(pos, -1);
         var korogu = new Korogu(pos);
         Game1.currentLocation.addCharacter(korogu);

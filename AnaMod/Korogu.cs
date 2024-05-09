@@ -9,9 +9,9 @@ namespace AnaMod;
 
 public class Korogu : NPC
 {
-    private readonly NetColor _color = new();
     private readonly NetFloat _alpha = new(1f);
     private readonly NetFloat _alphaChange = new();
+    private readonly NetColor _color = new();
     private bool _interacted;
 
     public Korogu(Vector2 position) : base(new AnimatedSprite("Characters\\Junimo", 0, 16, 16), position, 2, nameof(Korogu))
@@ -23,15 +23,27 @@ public class Korogu : NPC
         _interacted = false;
     }
 
+
     public override bool IsVillager => false;
+
+    ~Korogu()
+    {
+        // Game1.showGlobalMessage("Korogu deleted (:sadge:)");
+    }
 
     public override void update(GameTime time, GameLocation location)
     {
         base.update(time, location);
         Sprite.Animate(time, 0, 8, 50f);
         handleAlpha();
-        // facePlayer(Game1.MasterPlayer);
-        // this.flip = Game1.random.NextBool();
+        if (_interacted && _alpha.Value == 0)
+            // Game1.showGlobalMessage("Removing korogu from pool");
+            location.characters.Remove(this);
+    }
+
+    public override void Removed()
+    {
+        // Game1.showGlobalMessage("Korogu.removed");
     }
 
     private void handleAlpha()
@@ -42,7 +54,6 @@ public class Korogu : NPC
             _alpha.Value = 0;
             IsInvisible = true;
             HideShadow = true;
-            
         }
     }
 
@@ -56,7 +67,7 @@ public class Korogu : NPC
             new Vector2(Sprite.SpriteWidth * 4 / 2,
                 (float)(Sprite.SpriteHeight * 3.0 / 4.0 * 4.0 / Math.Pow(Sprite.SpriteHeight / 16, 2.0) + yJumpOffset - 8.0)) +
             (shakeTimer > 0 ? new Vector2(Game1.random.Next(-1, 2), Game1.random.Next(-1, 2)) : Vector2.Zero), Sprite.SourceRect,
-            _color.Value * this._alpha.Value, rotation, new Vector2(Sprite.SpriteWidth * 4 / 2, (float)(Sprite.SpriteHeight * 4 * 3.0 / 4.0)) / 4f,
+            _color.Value * _alpha.Value, rotation, new Vector2(Sprite.SpriteWidth * 4 / 2, (float)(Sprite.SpriteHeight * 4 * 3.0 / 4.0)) / 4f,
             Math.Max(0.2f, scale.Value) * 4f, flip ? SpriteEffects.FlipHorizontally : SpriteEffects.None,
             Math.Max(0.0f, drawOnTop ? 0.991f : StandingPixel.Y / 10000f));
     }

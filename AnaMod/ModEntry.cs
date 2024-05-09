@@ -1,7 +1,9 @@
-﻿using Microsoft.Xna.Framework.Graphics;
+﻿using Microsoft.Xna.Framework;
+using Microsoft.Xna.Framework.Graphics;
 using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
+using StardewValley.Extensions;
 using Object = StardewValley.Object;
 
 namespace AnaMod;
@@ -9,7 +11,6 @@ namespace AnaMod;
 internal sealed class ModEntry : Mod
 {
     private readonly Random _random = new();
-    private Korogu? _korogu;
     private ModConfig Config { get; set; } = new();
 
     public override void Entry(IModHelper helper)
@@ -36,7 +37,10 @@ internal sealed class ModEntry : Mod
         foreach (var o in e.Removed)
             // Log($"Removed object : {o.Value.Type} at pos {o.Key}");
             if (o.Value.Category == Object.litterCategory)
-                Log($"removed litter : {o.Value} at {o.Key}");
+            {
+                Log($"removed litter : {o.Value.Name} at {o.Key}");
+                if (Game1.random.NextBool(0.01)) ExampleMethods.SpawnKorogu(o.Key * 64);
+            }
     }
 
 
@@ -66,13 +70,6 @@ internal sealed class ModEntry : Mod
 
         if (_random.Next(1000) == 0) Game1.showGlobalMessage("<! - le chéri");
 
-        if (e.Button == SButton.Space)
-        {
-            // ExampleMethods.SpawnGold();
-            if (_korogu == null)
-                _korogu = ExampleMethods.SpawnKorogu();
-            else
-                _korogu.SetRandomColor();
-        }
+        if (e.Button == SButton.Space) ExampleMethods.SpawnKorogu(Game1.player.Position + Vector2.One * 64);
     }
 }
