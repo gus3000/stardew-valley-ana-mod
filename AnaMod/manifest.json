@@ -1,10 +1,12 @@
 ﻿{
   "Name": "AnaMod",
   "author": "gus3000",
-  "Version": "1.0.1",
+  "Version": "1.0.2",
   "description": "Un mod pour ma chérie",
   "UniqueID": "gus3000.AnaMod",
   "EntryDll": "AnaMod.dll",
   "MinimumApiVersion": "4.0.0",
-  "UpdateKeys": ["GitHub:gus3000/stardew-valley-ana-mod"]
+  "UpdateKeys": [
+    "GitHub:gus3000/stardew-valley-ana-mod"
+  ]
 }

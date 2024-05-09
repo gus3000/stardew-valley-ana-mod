@@ -1,19 +1,16 @@
-﻿using Microsoft.Xna.Framework;
-using StardewModdingAPI;
+﻿using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
 using StardewValley.Characters;
-using StardewValley.Menus;
 
 namespace AnaMod;
 
 internal sealed class ModEntry : Mod
 {
-    private ModConfig Config { get; set; } = new ModConfig();
+    private Junimo? _junimo;
 
-    private Random _random = new Random();
-
-    private Junimo? _junimo = null;
+    private readonly Random _random = new();
+    private ModConfig Config { get; set; } = new();
 
     public override void Entry(IModHelper helper)
     {
@@ -25,10 +22,7 @@ internal sealed class ModEntry : Mod
 
     private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
-        if (e.NameWithoutLocale.IsEquivalentTo("Data/mail"))
-        {
-            e.Edit(EditImpl);
-        }
+        if (e.NameWithoutLocale.IsEquivalentTo("Data/mail")) e.Edit(EditImpl);
     }
 
     public void EditImpl(IAssetData asset)
@@ -49,16 +43,11 @@ internal sealed class ModEntry : Mod
         if (!Context.IsWorldReady || Game1.currentLocation == null)
             return;
 
-        if (_random.Next(1000) == 0)
-        {
-            Game1.showGlobalMessage("<! - le chéri");
-        }
+        if (_random.Next(1000) == 0) Game1.showGlobalMessage("<! - le chéri");
 
         if (e.Button == SButton.Space)
-        {
             // ExampleMethods.SpawnGold();
-            if(_junimo == null)
+            if (_junimo == null)
                 _junimo = ExampleMethods.SpawnSprite();
-        }
     }
 }
