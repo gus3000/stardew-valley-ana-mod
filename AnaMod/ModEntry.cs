@@ -1,15 +1,15 @@
-﻿using StardewModdingAPI;
+﻿using Microsoft.Xna.Framework.Graphics;
+using StardewModdingAPI;
 using StardewModdingAPI.Events;
 using StardewValley;
-using StardewValley.Characters;
+using Object = StardewValley.Object;
 
 namespace AnaMod;
 
 internal sealed class ModEntry : Mod
 {
-    private Junimo? _junimo;
-
     private readonly Random _random = new();
+    private Korogu? _korogu;
     private ModConfig Config { get; set; } = new();
 
     public override void Entry(IModHelper helper)
@@ -18,11 +18,32 @@ internal sealed class ModEntry : Mod
         helper.Events.Content.AssetRequested += OnAssetRequested;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
         // helper.Events.GameLoop.GameLaunched += OnGameLaunched;
+        helper.Events.World.ObjectListChanged += OnObjectListChanged;
     }
+
+    private void Log(string message, LogLevel logLevel = LogLevel.Debug)
+    {
+        Monitor.Log(message, logLevel);
+    }
+
+    private void OnObjectListChanged(object? sender, ObjectListChangedEventArgs e)
+    {
+        // Log($"Object list changed : {e}");
+        // foreach (var o in e.Added)
+        // {
+        //     Log($"Added object : {o.Value.Type} at pos {o.Key}");
+        // }
+        foreach (var o in e.Removed)
+            // Log($"Removed object : {o.Value.Type} at pos {o.Key}");
+            if (o.Value.Category == Object.litterCategory)
+                Log($"removed litter : {o.Value} at {o.Key}");
+    }
+
 
     private void OnAssetRequested(object? sender, AssetRequestedEventArgs e)
     {
         if (e.NameWithoutLocale.IsEquivalentTo("Data/mail")) e.Edit(EditImpl);
+        if (e.Name.IsEquivalentTo("Portraits/Korogu")) e.LoadFromModFile<Texture2D>("assets/korogu-portraits.png", AssetLoadPriority.Medium);
     }
 
     public void EditImpl(IAssetData asset)
@@ -46,8 +67,12 @@ internal sealed class ModEntry : Mod
         if (_random.Next(1000) == 0) Game1.showGlobalMessage("<! - le chéri");
 
         if (e.Button == SButton.Space)
+        {
             // ExampleMethods.SpawnGold();
-            if (_junimo == null)
-                _junimo = ExampleMethods.SpawnSprite();
+            if (_korogu == null)
+                _korogu = ExampleMethods.SpawnKorogu();
+            else
+                _korogu.SetRandomColor();
+        }
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.Xna.Framework;
 using StardewValley;
-using StardewValley.Characters;
 using Object = StardewValley.Object;
 
 namespace AnaMod;
@@ -22,11 +21,12 @@ public class ExampleMethods
             Game1.showRedMessage("Cannot spawn gold");
     }
 
-    public static Junimo SpawnSprite()
+    public static Korogu SpawnKorogu()
     {
         var pos = Game1.player.Position + Vector2.One * 64;
-        var junimo = new Junimo(pos, -1);
-        Game1.currentLocation.addCharacter(junimo);
-        return junimo;
+        // var junimo = new Junimo(pos, -1);
+        var korogu = new Korogu(pos);
+        Game1.currentLocation.addCharacter(korogu);
+        return korogu;
     }
 }
