@@ -1,7 +1,7 @@
 ﻿{
   "Name": "AnaMod",
   "author": "gus3000",
-  "Version": "1.1.0",
+  "Version": "1.1.1",
   "description": "Un mod pour ma chérie",
   "UniqueID": "gus3000.AnaMod",
   "EntryDll": "AnaMod.dll",

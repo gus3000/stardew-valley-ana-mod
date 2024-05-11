@@ -10,21 +10,27 @@ namespace AnaMod;
 
 internal sealed class ModEntry : Mod
 {
+    private static IMonitor? _monitor;
+
     private readonly Random _random = new();
     private ModConfig Config { get; set; } = new();
 
     public override void Entry(IModHelper helper)
     {
+        _monitor = Monitor;
         helper.Events.Input.ButtonPressed += OnButtonPressed;
         helper.Events.Content.AssetRequested += OnAssetRequested;
         helper.Events.GameLoop.DayStarted += OnDayStarted;
+        helper.Events.GameLoop.DayEnding += OnDayEnding;
         // helper.Events.GameLoop.GameLaunched += OnGameLaunched;
         helper.Events.World.ObjectListChanged += OnObjectListChanged;
+
+        // new ModUpdater(helper.DirectoryPath).UpdateMod();
     }
 
-    private void Log(string message, LogLevel logLevel = LogLevel.Debug)
+    public static void Log(string message, LogLevel logLevel = LogLevel.Debug)
     {
-        Monitor.Log(message, logLevel);
+        _monitor?.Log(message, logLevel);
     }
 
     private void OnObjectListChanged(object? sender, ObjectListChangedEventArgs e)
@@ -62,6 +68,19 @@ internal sealed class ModEntry : Mod
     {
         Game1.addMailForTomorrow("AnaMod-Mail-1");
     }
+    
+    private void OnDayEnding(object? sender, DayEndingEventArgs e)
+    {
+        foreach (var location in Game1.locations)
+        {
+            // Log($"Location : {location}");
+            location.characters.RemoveWhere(npc =>
+            {
+                // Log($"{npc.Name} is a Korogu ? {npc is Korogu}");
+                return npc is Korogu;
+            });
+        }
+    }
 
     private void OnButtonPressed(object? sender, ButtonPressedEventArgs e)
     {
@@ -70,6 +89,9 @@ internal sealed class ModEntry : Mod
 
         if (_random.Next(1000) == 0) Game1.showGlobalMessage("<! - le chéri");
 
-        if (e.Button == SButton.Space) ExampleMethods.SpawnKorogu(Game1.player.Position + Vector2.One * 64);
+
+        // DEBUG
+        // if (e.Button == SButton.Space) ExampleMethods.SpawnKorogu(Game1.player.Position + Vector2.One * 64);
+        // if (e.Button == SButton.NumPad0) OnDayEnding(null, new DayEndingEventArgs());
     }
 }

@@ -9,11 +9,12 @@ namespace AnaMod;
 
 public class Korogu : NPC
 {
+    public override bool IsVillager => false;
     private readonly NetFloat _alpha = new(1f);
     private readonly NetFloat _alphaChange = new();
     private readonly NetColor _color = new();
     private bool _interacted;
-
+    
     public Korogu(Vector2 position) : base(new AnimatedSprite("Characters\\Junimo", 0, 16, 16), position, 2, nameof(Korogu))
     {
         SetRandomColor();
@@ -22,9 +23,6 @@ public class Korogu : NPC
         Scale = 0.75f;
         _interacted = false;
     }
-
-
-    public override bool IsVillager => false;
 
     ~Korogu()
     {

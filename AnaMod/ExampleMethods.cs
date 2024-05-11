@@ -23,8 +23,6 @@ public class ExampleMethods
 
     public static Korogu SpawnKorogu(Vector2 pos)
     {
-        // pos = Game1.player.Position + Vector2.One * 64;
-        // var junimo = new Junimo(pos, -1);
         var korogu = new Korogu(pos);
         Game1.currentLocation.addCharacter(korogu);
         return korogu;
